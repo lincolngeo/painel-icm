@@ -1314,6 +1314,8 @@ function expPDF(){
   var w=window.open('','_blank');
   if(!w){ alert('Permita pop-ups para gerar o relatório.'); return; }
   w.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'+
+    '<meta name="viewport" content="width=device-width, initial-scale=1">'+
+    '<meta name="theme-color" content="#272F68">'+
     '<title>Relatório ICM — '+esc(tituloRel)+'</title><style>'+
     '@page{size:A4 portrait;margin:14mm}'+
     'body{font-family:Arial,Helvetica,sans-serif;color:#22252E;font-size:12px;line-height:1.5;margin:0}'+
@@ -1349,8 +1351,25 @@ function expPDF(){
     '.dimcx .vi{break-inside:avoid;padding:2px 0;display:flex;gap:6px;line-height:1.35}'+
     'footer{margin:16px 18px;border-top:1px solid #E3E6ED;padding-top:8px;color:#8A9099;font-size:10px}'+
     '.btn{background:#272F68;color:#fff;border:0;padding:9px 16px;border-radius:8px;cursor:pointer;font-weight:700}'+
+    '.barra-acao{text-align:right;padding:8px 18px}'+
+    // ---- tela pequena: prévia legível e botão em destaque (não afeta a impressão) ----
+    '@media screen and (max-width:820px){'+
+    'body{font-size:13.5px}'+
+    '.barra-acao{position:sticky;top:0;z-index:20;background:#fff;padding:10px 12px;'+
+    'border-bottom:1px solid #E3E6ED;box-shadow:0 2px 10px rgba(20,25,50,.10);text-align:center}'+
+    '.btn{display:block;width:100%;font-size:17px;padding:15px 16px;border-radius:12px;'+
+    'background:#F4A44C;color:#3a2606;box-shadow:0 2px 8px rgba(20,25,50,.25)}'+
+    '.wrap{padding:12px}'+
+    '.cab{padding:10px 12px}.cab h1{font-size:15px}'+
+    '.intro{flex-direction:column}'+
+    '.intro .loc{width:100%}'+
+    '.intro .loc img{width:100%;max-width:340px;height:auto;display:block;margin:0 auto}'+
+    '.graf img,.g-faixa,.g-dim,.g-vars{width:100%!important;max-width:100%!important}'+
+    '.vlist{columns:1}.dimcx .vgrid{columns:1}'+
+    '.info td:first-child{width:46%}'+
+    '}'+
     '@media print{.noprint{display:none}}</style></head><body>'+
-    '<div class="noprint" style="text-align:right;padding:8px 18px">'+
+    '<div class="noprint barra-acao">'+
     '<button class="btn" onclick="window.print()">🖨 Imprimir / Salvar em PDF</button></div>'+
     '<div class="cab"><img src="img/marca_defesa_civil_quadrada.png">'+
     '<div><h1>Relatório do ICM — Indicador de Capacidade Municipal</h1>'+
