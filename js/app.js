@@ -3,6 +3,12 @@
    Metodologia: Nota Técnica 1/2023 (SEDEC/DAG) e NT 004/2026 (CENAD/Sedec). */
 'use strict';
 
+// marca <html class="toque"> no primeiro toque: desliga a abertura por hover
+// (em telas de toque o :hover fica "grudado" e travava o × de fechar a exportação)
+window.addEventListener('touchstart', function(){
+  document.documentElement.classList.add('toque');
+}, {passive:true, once:true});
+
 // ---------- paleta ----------
 var NAVY='#272F68', LARANJA='#F4A44C';
 var COR_FX={A:'#1B7A4B', B:'#7FB069', C:'#F4A44C', D:'#B5482F'};
