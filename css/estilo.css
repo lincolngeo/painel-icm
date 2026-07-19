@@ -177,17 +177,27 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 /* ---------- controle de exportação (caixinha no mapa, abaixo das camadas) ---------- */
 .exp-ctl{position:relative}
 .leaflet-touch .exp-ctl a.exp-toggle,.exp-ctl a.exp-toggle{background:#fff;width:34px;height:34px;
-  line-height:34px;text-align:center;font-size:18px;color:var(--navy);text-decoration:none;
-  display:block;cursor:pointer}
+  display:flex;align-items:center;justify-content:center;color:var(--navy);text-decoration:none;
+  cursor:pointer}
+.exp-ctl a.exp-toggle svg{width:19px;height:19px;display:block}
 .exp-ctl a.exp-toggle:hover{background:var(--fundo)}
 /* painel encostado no ícone (right:100%, sem folga) p/ o hover não quebrar ao atravessar */
 .exp-panel{display:none;position:absolute;top:0;right:100%;width:252px;background:#fff;
   border-radius:10px;box-shadow:0 6px 24px rgba(20,25,50,.24);border:1px solid var(--linha);
   padding:6px;text-align:left}
 .exp-ctl:hover .exp-panel,.exp-ctl.aberto .exp-panel{display:block}
-.exp-panel button{display:block;width:100%;text-align:left;border:0;background:transparent;
+.exp-panel button[data-exp]{display:block;width:100%;text-align:left;border:0;background:transparent;
   font-family:inherit;font-size:13px;color:var(--tinta);padding:8px 9px;border-radius:7px;cursor:pointer}
-.exp-panel button:hover{background:var(--fundo);color:var(--navy)}
+.exp-panel button[data-exp]:hover{background:var(--fundo);color:var(--navy)}
+/* botão × de fechar (só no mobile — no desktop abre/fecha por hover) */
+.exp-fechar{display:none;position:absolute;top:4px;right:4px;width:26px;height:26px;
+  border:0;background:var(--fundo);color:var(--cinza);border-radius:7px;font-size:19px;
+  line-height:1;cursor:pointer;align-items:center;justify-content:center;z-index:2}
+.exp-fechar:hover{background:#E6E9F0;color:var(--navy)}
+.camadas-fechar{display:none;position:absolute;top:4px;right:4px;width:24px;height:24px;
+  border:0;background:var(--fundo);color:var(--cinza);border-radius:6px;font-size:18px;
+  line-height:1;cursor:pointer;align-items:center;justify-content:center;z-index:2}
+.camadas-fechar:hover{background:#E6E9F0;color:var(--navy)}
 
 /* ---------- tooltip ---------- */
 .leaflet-tooltip.tt{background:var(--navy);color:#fff;border:0;box-shadow:var(--sombra);
@@ -332,6 +342,22 @@ a.ctl-btn:hover{background:var(--fundo)}
   .painel-esq{border-top:0}
   .lista-wrap{max-height:340px}
   .gchart{height:150px}
+
+  /* botões × de fechar (no toque não há hover) */
+  .exp-fechar{display:flex}
+  .exp-panel{z-index:1200;max-height:calc(60vh - 70px);overflow-y:auto}
+  .exp-panel .dd-tit{padding-right:30px}
+  .exp-panel .dd-nota{display:none}   /* encurta o painel p/ não alcançar a legenda */
+  .exp-panel button[data-exp]{padding:7px 9px}
+  .leaflet-control-layers-expanded .camadas-fechar{display:flex}
+  .leaflet-control-layers-expanded .leaflet-control-layers-list{padding-right:22px}
+
+  /* legenda compacta p/ não cobrir a caixa de exportação */
+  .leaflet-legenda{padding:6px 8px 7px;max-width:150px}
+  .legenda-in h4{font-size:9.5px;margin-bottom:4px}
+  .legenda-in .row{font-size:10px;margin:1px 0;gap:5px}
+  .legenda-in .sw{width:11px;height:11px}
+  .legenda-in .dica{font-size:9.5px}
 }
 @media(max-width:560px){
   header h1{font-size:12.5px}

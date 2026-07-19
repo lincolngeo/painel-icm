@@ -94,8 +94,9 @@ function iniciaMapa(){
   mapa=L.map('mapa',{zoomControl:false, attributionControl:true, fadeAnimation:false,
     preferCanvas:true, minZoom:3, maxZoom:12, layers:[esri]}).setView([-15,-54],4);
   mapa.attributionControl.setPrefix('ICM/MIDR · IBGE');
-  L.control.layers(basemaps,{'Rótulos e limites (satélite)':rotulos},
+  var ctlCamadas=L.control.layers(basemaps,{'Rótulos e limites (satélite)':rotulos},
     {position:'topright',collapsed:true}).addTo(mapa);
+  addFecharCamadas(ctlCamadas);            // botão × p/ fechar no mobile (sem hover)
   addExportar('topright');                 // caixinha de exportação logo abaixo das camadas
   L.control.zoom({position:'topright'}).addTo(mapa);
   mapa.on('baselayerchange',function(e){ S.base=e.name; reestiliza(); });
@@ -151,19 +152,32 @@ function addLegenda(pos){
     return d; }});
   new C().addTo(mapa);
 }
+// botão × para fechar o controle de camadas no mobile (não há hover no toque)
+function addFecharCamadas(ctl){
+  var cont=ctl.getContainer();
+  var x=L.DomUtil.create('button','camadas-fechar',cont);
+  x.type='button'; x.innerHTML='×'; x.title='Fechar';
+  L.DomEvent.on(x,'click',function(e){ L.DomEvent.stop(e);
+    if(ctl.collapse) ctl.collapse(); else L.DomUtil.removeClass(cont,'leaflet-control-layers-expanded'); });
+}
 // exportação como caixinha (ícone download) logo abaixo do controle de camadas
 function addExportar(pos){
   var C=L.Control.extend({options:{position:pos||'topright'},onAdd:function(){
     var d=L.DomUtil.create('div','leaflet-bar leaflet-control exp-ctl');
     d.innerHTML=
       '<a class="exp-toggle" id="btnExportar" href="#" title="Exportar recorte" '+
-        'role="button" aria-label="Exportar">⭳</a>'+
+        'role="button" aria-label="Exportar">'+
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0l-4.2-4.2M12 14l4.2-4.2'+
+        'M4.5 19.5h15" fill="none" stroke="currentColor" stroke-width="2.2" '+
+        'stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+      '</a>'+
       '<div class="exp-panel" id="menuExportar">'+
+        '<button class="exp-fechar" id="expFechar" type="button" title="Fechar" aria-label="Fechar">×</button>'+
         '<div class="dd-tit">Recorte atual: <b id="ddRecorte">Brasil</b></div>'+
         '<button data-exp="pdf">📄 Relatório (PDF / impressão)</button>'+
         '<button data-exp="csv">🗒️ Tabela CSV</button>'+
         '<button data-exp="geojson">🌐 GeoJSON</button>'+
-        '<button data-exp="kmz">🅚 KMZ (Google Earth)</button>'+
+        '<button data-exp="kmz">🗺️ KMZ (Google Earth)</button>'+
         '<div class="dd-nota" id="ddNota"></div>'+
       '</div>';
     L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
@@ -228,6 +242,22 @@ function desenhaBrasil(){
   if(S.brModo==='uf') desenhaUF();
   else desenhaMunBrasil();
 }
+// enquadra o país: no celular (tela estreita/alta) ajusta aos limites continentais
+// para não cortar as bordas; no desktop mantém o zoom fixo centralizado.
+function enquadraNacional(){
+  if(window.innerWidth<=860){
+    var b=boundsLLcont(ufFeats);
+    if(b){
+      mapa.invalidateSize(false);                 // garante o tamanho real antes de ajustar
+      mapa.fitBounds(b,{padding:[8,8],animate:false});
+      // re-enquadra após o layout assentar (carregamento inicial no celular)
+      setTimeout(function(){ if(S.nivel==='brasil'){ mapa.invalidateSize(false);
+        mapa.fitBounds(b,{padding:[8,8],animate:false}); } },260);
+      return;
+    }
+  }
+  mapa.setView([-15,-54],4);
+}
 // visão nacional por MUNICÍPIO (todos os municípios do país, coloridos pela faixa do ICM)
 function desenhaMunBrasil(){
   limpaCamadasBrasil();
@@ -257,7 +287,7 @@ function pintaMunBrasil(){
       click:function(){ entraUF(f.properties.uf, f.properties.cd); }
     });
   }}).addTo(mapa);
-  mapa.setView([-15,-54],4);
+  enquadraNacional();
 }
 function desenhaUF(){
   limpaCamadasBrasil();
@@ -269,7 +299,7 @@ function desenhaUF(){
       click:function(){ entraUF(f.properties.uf); }
     });
   }}).addTo(mapa);
-  mapa.setView([-15,-54],4);
+  enquadraNacional();
 }
 function entraUF(uf,focoCd){
   S.nivel='uf'; S.uf=uf; S.sel=null; loading(true); fechaDetalhe();
@@ -958,8 +988,11 @@ function bindUI(){
   document.getElementById('btnExportar').onclick=function(e){
     e.preventDefault(); e.stopPropagation();
     if(expCtl) expCtl.classList.toggle('aberto'); atualizaExport(); };
+  var expFechar=document.getElementById('expFechar');
+  if(expFechar) expFechar.onclick=function(e){
+    e.preventDefault(); e.stopPropagation(); if(expCtl) expCtl.classList.remove('aberto'); };
   document.getElementById('menuExportar').onclick=function(e){
-    var b=e.target.closest('button'); if(!b) return; exportar(b.dataset.exp); };
+    var b=e.target.closest('button'); if(!b||!b.dataset.exp) return; exportar(b.dataset.exp); };
   document.addEventListener('click',function(e){
     if(expCtl && !e.target.closest('.exp-ctl')) expCtl.classList.remove('aberto'); });
   // setas de rolagem: painéis esquerdo/direito, lista e modal
