@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel ICM — Indicador de Capacidade Municipal | Defesa Civil</title>
+<link rel="stylesheet" href="libs/leaflet.css">
+<link rel="stylesheet" href="css/estilo.css?v=3">
+</head>
+<body>
+
+<header>
+  <div class="marca-placa">
+    <img src="img/marca_defesa_civil_quadrada.png" alt="Defesa Civil Brasil">
+  </div>
+  <div class="titwrap">
+    <h1>Painel do Indicador de Capacidade Municipal — ICM</h1>
+    <div class="sub">Capacidade dos municípios brasileiros na gestão de riscos e desastres ·
+      apuração 28/04/2026 · PPA 2024–2027</div>
+  </div>
+  <nav>
+    <a class="ativo" href="#" id="navBrasil">Panorama Brasil</a>
+    <a href="#" id="navVars">As 20 variáveis</a>
+    <a href="#" id="navMet">Metodologia</a>
+  </nav>
+</header>
+
+<div class="controles">
+  <div class="grupo">
+    <label>Visualizar por</label>
+    <div class="seg" id="segMetric">
+      <button data-v="faixa" class="on">Faixa ICM</button>
+      <button data-v="pontos">Pontuação (0–20)</button>
+      <button data-v="prior">Perfil de risco</button>
+    </div>
+  </div>
+  <div class="grupo">
+    <label>Filtrar faixa</label>
+    <div class="seg laranja" id="segFaixa">
+      <button data-v="todas" class="on">Todas</button>
+      <button data-v="A">A</button>
+      <button data-v="B">B</button>
+      <button data-v="C">C</button>
+      <button data-v="D">D</button>
+    </div>
+  </div>
+  <div class="ctl-direita">
+    <div class="grupo" id="grpBrModo">
+      <label>Mapa do Brasil</label>
+      <div class="seg" id="segBrModo">
+        <button data-v="mun" class="on">Municípios</button>
+        <button data-v="uf">Estados</button>
+      </div>
+    </div>
+    <div class="migalha">
+      <span id="migalha"><b>Brasil</b> · 27 UFs</span>
+      <button id="btnVoltar" disabled>◀ Voltar ao Brasil</button>
+    </div>
+  </div>
+</div>
+
+<div class="corpo">
+  <!-- PAINEL ESQUERDO: síntese + detalhe + legenda (fora do mapa) -->
+  <aside class="painel painel-esq" id="painelEsq">
+    <div class="card narr-card">
+      <h3 id="narTit">Síntese do recorte</h3>
+      <div class="nar-corpo" id="narCorpo"></div>
+    </div>
+
+    <div class="card det-card" id="detCard" style="display:none">
+      <div class="det-head2">
+        <div class="det-htext">
+          <div class="det-nome" id="detNome">—</div>
+          <div class="det-sub" id="detSub">—</div>
+        </div>
+        <button class="det-x" id="detFechar" title="Fechar detalhe">×</button>
+      </div>
+      <div class="det-abas" id="detAbas"></div>
+      <div class="det-corpo" id="detCorpo"></div>
+    </div>
+  </aside>
+
+  <!-- MAPA isolado no centro -->
+  <div id="mapa">
+    <div class="load" id="load"><span>Carregando…</span></div>
+  </div>
+
+  <aside class="painel" id="painelDir">
+    <!-- escopo + busca -->
+    <div class="card">
+      <div class="escopo" id="escopoNome">Brasil</div>
+      <div class="escopo"><small id="escopoSub">5.570 municípios</small></div>
+      <div class="busca">
+        <input id="busca" type="search" placeholder="Buscar UF ou município…" autocomplete="off">
+        <div class="busca-res" id="buscaRes"></div>
+      </div>
+    </div>
+
+    <!-- cards resumo -->
+    <div class="card">
+      <h3>Resumo do recorte</h3>
+      <div class="kpis" id="kpis"></div>
+    </div>
+
+    <!-- grafico por faixa -->
+    <div class="card">
+      <h3>Municípios por faixa de ICM</h3>
+      <div class="gchart" id="chartFaixa"></div>
+      <div class="dica" id="dicaFaixa"></div>
+    </div>
+
+    <!-- prioritarios -->
+    <div class="card">
+      <h3>Perfil de risco</h3>
+      <div class="gchart2" id="chartPrior"></div>
+    </div>
+
+    <!-- lista -->
+    <div class="card">
+      <h3 id="listaTit">Unidades da Federação</h3>
+      <div class="lista-wrap"><table class="rank"><thead><tr>
+        <th class="pos"></th><th>Local</th><th class="c" id="thFaixa">Faixa</th>
+        <th class="n" id="thPontos">Pontos</th>
+      </tr></thead><tbody id="listaBody"></tbody></table></div>
+      <div class="dica" id="listaDica"></div>
+    </div>
+
+    <div class="rodape" id="rodape"></div>
+  </aside>
+</div>
+
+<!-- modal (20 variáveis / metodologia) -->
+<div class="modal-fundo" id="modalFundo">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-tit" id="modalTit">—</div>
+      <button class="det-x" id="modalFechar" title="Fechar">×</button>
+    </div>
+    <div class="modal-corpo" id="modalCorpo"></div>
+  </div>
+</div>
+
+<script src="libs/leaflet.js"></script>
+<script src="libs/echarts.min.js"></script>
+<script src="libs/fflate.min.js"></script>
+<script src="js/app.js?v=9"></script>
+</body>
+</html>

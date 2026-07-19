@@ -1,0 +1,307 @@
+/* Painel ICM — identidade Defesa Civil Brasil
+   Azul #272F68 · Laranja #F4A44C · marca quadrada (variação preferencial)
+   Fonte Mukta (substituta livre de Museo Sans, licenciada) */
+
+@font-face{font-family:'Mukta';font-weight:300;font-display:swap;
+  src:url('../libs/fonts/mukta-300.woff2') format('woff2');}
+@font-face{font-family:'Mukta';font-weight:500;font-display:swap;
+  src:url('../libs/fonts/mukta-500.woff2') format('woff2');}
+@font-face{font-family:'Mukta';font-weight:700;font-display:swap;
+  src:url('../libs/fonts/mukta-700.woff2') format('woff2');}
+
+:root{
+  --navy:#272F68; --navy2:#3A4585; --laranja:#F4A44C; --laranja-esc:#C8741E;
+  --fxA:#1B7A4B; --fxB:#7FB069; --fxC:#F4A44C; --fxD:#B5482F;   /* faixas A-D */
+  --tinta:#22252E; --cinza:#5B6068; --cinza-cl:#8A9099;
+  --linha:#E3E6ED; --fundo:#EEF1F6; --branco:#fff;
+  --sombra:0 1px 3px rgba(20,25,50,.10),0 4px 14px rgba(20,25,50,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'Mukta',system-ui,'Segoe UI',sans-serif;color:var(--tinta);
+  background:var(--fundo);font-size:14px;font-weight:300;
+  display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* ---------- cabeçalho (mais espesso p/ a marca quadrada) ---------- */
+header{background:var(--navy);color:#fff;display:flex;align-items:center;
+  gap:16px;padding:12px 22px;flex:0 0 auto;box-shadow:var(--sombra);z-index:1000;
+  border-bottom:3px solid var(--laranja)}
+.marca-placa{background:#fff;border-radius:10px;padding:7px;flex:0 0 auto;
+  box-shadow:0 2px 8px rgba(0,0,0,.22);display:flex}
+.marca-placa img{width:58px;height:auto;display:block}
+header .titwrap{flex:1 1 auto;min-width:0}
+header h1{font-size:19px;font-weight:700;margin:0;line-height:1.15;letter-spacing:.2px}
+header .sub{font-size:12.5px;font-weight:300;color:#C7CCE4;margin-top:3px}
+header nav{display:flex;gap:4px}
+header nav a{color:#C7CCE4;text-decoration:none;font-size:12.5px;font-weight:500;
+  padding:6px 12px;border-radius:6px}
+header nav a.ativo{background:rgba(255,255,255,.14);color:#fff}
+header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
+
+/* ---------- controles ---------- */
+.controles{background:#fff;border-bottom:1px solid var(--linha);flex:0 0 auto;
+  display:flex;align-items:center;gap:18px;padding:8px 20px;flex-wrap:wrap;z-index:900}
+.grupo{display:flex;align-items:center;gap:8px}
+.grupo>label{font-size:11px;font-weight:700;color:var(--cinza);
+  text-transform:uppercase;letter-spacing:.4px}
+.seg{display:inline-flex;background:var(--fundo);border:1px solid var(--linha);
+  border-radius:8px;padding:2px;gap:2px}
+.seg button{border:0;background:transparent;font-family:inherit;font-size:12.5px;
+  font-weight:500;color:var(--cinza);padding:5px 12px;border-radius:6px;cursor:pointer}
+.seg button:hover{color:var(--navy)}
+.seg button.on{background:var(--navy);color:#fff;box-shadow:var(--sombra)}
+.seg.laranja button.on{background:var(--laranja);color:#3a2606}
+/* dropdown de exportação */
+.dropdown{position:relative;margin-left:auto}
+.dd-btn{border:1px solid var(--linha);background:#fff;border-radius:8px;padding:6px 12px;
+  font-family:inherit;font-size:12.5px;font-weight:700;color:var(--navy);cursor:pointer}
+.dd-btn:hover{background:var(--fundo)}
+.dd-menu{position:absolute;top:calc(100% + 5px);right:0;background:#fff;border-radius:10px;
+  box-shadow:0 6px 24px rgba(20,25,50,.22);border:1px solid var(--linha);padding:6px;
+  min-width:250px;z-index:1100;display:none}
+.dd-menu.on{display:block}
+.dd-tit{font-size:11px;color:var(--cinza);padding:5px 9px 7px;border-bottom:1px solid var(--linha);
+  margin-bottom:4px}
+.dd-tit b{color:var(--navy)}
+.dd-menu button{display:block;width:100%;text-align:left;border:0;background:transparent;
+  font-family:inherit;font-size:13px;color:var(--tinta);padding:8px 9px;border-radius:7px;cursor:pointer}
+.dd-menu button:hover{background:var(--fundo);color:var(--navy)}
+.dd-nota{font-size:11px;color:var(--cinza-cl);line-height:1.4;padding:7px 9px 3px;
+  border-top:1px solid var(--linha);margin-top:4px}
+.dd-nota b{color:var(--cinza)}
+.ctl-direita{display:flex;align-items:center;gap:18px;margin-left:auto}
+.migalha{display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--cinza)}
+.migalha b{color:var(--navy);font-weight:700}
+.migalha button{border:1px solid var(--linha);background:#fff;border-radius:6px;
+  padding:5px 10px;font-family:inherit;font-size:12px;font-weight:500;
+  color:var(--navy);cursor:pointer}
+.migalha button:hover{background:var(--fundo)}
+.migalha button[disabled]{opacity:.4;cursor:default}
+
+/* ---------- corpo ---------- */
+.corpo{flex:1 1 auto;display:flex;min-height:0}
+#mapa{flex:1 1 auto;background:#DCE6F1;position:relative}
+.leaflet-container{background:#DCE6F1;font-family:inherit}
+.painel{flex:0 0 380px;background:var(--fundo);border-left:1px solid var(--linha);
+  overflow-y:auto;padding:12px}
+.card{background:#fff;border-radius:10px;box-shadow:var(--sombra);
+  padding:12px 14px;margin-bottom:10px}
+.card h3{margin:0 0 8px;font-size:11px;font-weight:700;color:var(--cinza);
+  text-transform:uppercase;letter-spacing:.5px}
+.escopo{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.escopo small{font-weight:500;color:var(--cinza-cl);font-size:12px}
+
+/* busca */
+.busca{position:relative;margin-top:8px}
+.busca input{width:100%;border:1px solid var(--linha);border-radius:8px;
+  padding:7px 10px;font-family:inherit;font-size:13px;color:var(--tinta);background:var(--fundo)}
+.busca input:focus{outline:2px solid var(--laranja);outline-offset:-1px;background:#fff}
+.busca-res{position:absolute;top:100%;left:0;right:0;background:#fff;z-index:50;
+  border:1px solid var(--linha);border-radius:8px;box-shadow:var(--sombra);
+  max-height:250px;overflow-y:auto;display:none;margin-top:3px}
+.busca-res.on{display:block}
+.busca-res div{padding:6px 10px;font-size:12.5px;cursor:pointer;
+  border-bottom:1px solid #F4F6FA;display:flex;justify-content:space-between;gap:6px}
+.busca-res div:hover{background:#FCEFDD}
+.busca-res .uf-tag{color:var(--cinza-cl);font-size:11px}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--fundo);border-radius:8px;padding:8px 10px}
+.kpi .v{font-size:17px;font-weight:700;line-height:1.05;color:var(--navy)}
+.kpi .r{font-size:10px;font-weight:500;color:var(--cinza);margin-top:2px;
+  text-transform:uppercase;letter-spacing:.3px}
+.kpi.full{grid-column:1/-1}
+.pill{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;
+  font-weight:700;color:#fff}
+.pA{background:var(--fxA)} .pB{background:var(--fxB)} .pC{background:var(--fxC);color:#3a2606}
+.pD{background:var(--fxD)}
+
+.gchart{width:100%;height:172px}
+.gchart2{width:100%;height:76px}
+.dica{font-size:11px;color:var(--cinza);line-height:1.4;margin-top:4px}
+
+/* lista rolavel */
+.lista-wrap{max-height:280px;overflow-y:auto;border:1px solid var(--linha);
+  border-radius:8px}
+.rank{width:100%;border-collapse:collapse;font-size:12.5px}
+.rank thead th{position:sticky;top:0;background:#fff;z-index:2;
+  text-align:left;font-size:10px;text-transform:uppercase;color:var(--cinza-cl);
+  font-weight:700;padding:5px 6px;border-bottom:1px solid var(--linha)}
+.rank td{padding:4px 6px;border-bottom:1px solid #F1F3F8}
+.rank td.n{text-align:right;font-weight:500;font-variant-numeric:tabular-nums}
+.rank td.c{text-align:center}
+.rank tr{cursor:pointer}
+.rank tr:hover td{background:#FCEFDD}
+.rank tr.sel td{background:#FDE7C8}
+.rank .pos{color:var(--cinza-cl);width:22px;text-align:right}
+
+/* ---------- painel esquerdo (coluna fixa, fora do mapa) ---------- */
+.painel-esq{flex:0 0 320px;border-left:0;border-right:1px solid var(--linha)}
+.narr-card h3,.leg-card h3{margin:0 0 7px}
+.nar-corpo{font-size:12.5px;line-height:1.5;color:var(--tinta)}
+.nar-corpo b{color:var(--navy)}
+.nar-corpo .fx{font-weight:700}
+.nar-corpo p{margin:0 0 7px}
+.nar-corpo p:last-child{margin-bottom:0}
+.nar-destaque{background:var(--fundo);border-left:3px solid var(--laranja);
+  border-radius:0 7px 7px 0;padding:6px 9px;margin:7px 0 0;font-size:12px}
+
+/* detalhe (município/UF) como card no painel esquerdo */
+.det-card{padding:0;overflow:hidden}
+.det-head2{background:var(--navy);color:#fff;padding:9px 12px;display:flex;
+  align-items:flex-start;gap:8px}
+.det-htext{flex:1 1 auto;min-width:0}
+.det-head2 .det-nome{font-size:15px;font-weight:700;line-height:1.15}
+.det-head2 .det-sub{font-size:11px;color:#C7CCE4;margin-top:2px}
+.det-x{margin-left:auto;background:transparent;border:0;color:#C7CCE4;font-size:20px;
+  line-height:1;cursor:pointer;padding:0 2px;flex:0 0 auto}
+.det-x:hover{color:#fff}
+.det-abas{display:flex;gap:2px;padding:6px 8px 0;background:var(--fundo);
+  border-bottom:1px solid var(--linha);flex-wrap:wrap}
+.det-abas button{border:0;background:transparent;font-family:inherit;font-size:11.5px;
+  font-weight:700;color:var(--cinza);padding:6px 9px;border-radius:7px 7px 0 0;cursor:pointer}
+.det-abas button.on{background:#fff;color:var(--navy);box-shadow:0 -1px 0 var(--linha) inset}
+.det-corpo{padding:11px 13px}
+
+/* ---------- legenda (controle no canto inferior esquerdo do mapa) ---------- */
+.leaflet-legenda{background:#fff;border-radius:9px;box-shadow:0 2px 10px rgba(20,25,50,.20);
+  border:1px solid var(--linha);padding:8px 11px 9px;max-width:230px;font-family:inherit}
+.legenda-in h4{margin:0 0 6px;font-size:11px;font-weight:700;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.4px}
+.legenda-in .row{display:flex;align-items:center;gap:7px;font-size:12px;margin:2px 0}
+.legenda-in .sw{width:15px;height:15px;border-radius:3px;flex:0 0 auto;
+  border:1px solid rgba(0,0,0,.12)}
+
+/* ---------- controle de exportação (caixinha no mapa, abaixo das camadas) ---------- */
+.exp-ctl{position:relative}
+.leaflet-touch .exp-ctl a.exp-toggle,.exp-ctl a.exp-toggle{background:#fff;width:34px;height:34px;
+  line-height:34px;text-align:center;font-size:18px;color:var(--navy);text-decoration:none;
+  display:block;cursor:pointer}
+.exp-ctl a.exp-toggle:hover{background:var(--fundo)}
+/* painel encostado no ícone (right:100%, sem folga) p/ o hover não quebrar ao atravessar */
+.exp-panel{display:none;position:absolute;top:0;right:100%;width:252px;background:#fff;
+  border-radius:10px;box-shadow:0 6px 24px rgba(20,25,50,.24);border:1px solid var(--linha);
+  padding:6px;text-align:left}
+.exp-ctl:hover .exp-panel,.exp-ctl.aberto .exp-panel{display:block}
+.exp-panel button{display:block;width:100%;text-align:left;border:0;background:transparent;
+  font-family:inherit;font-size:13px;color:var(--tinta);padding:8px 9px;border-radius:7px;cursor:pointer}
+.exp-panel button:hover{background:var(--fundo);color:var(--navy)}
+
+/* ---------- tooltip ---------- */
+.leaflet-tooltip.tt{background:var(--navy);color:#fff;border:0;box-shadow:var(--sombra);
+  border-radius:7px;padding:8px 11px;font-family:inherit;font-size:12.5px;max-width:280px}
+.leaflet-tooltip.tt:before{display:none}
+.tt b{color:var(--laranja);font-weight:700}
+.tt .l{color:#C7CCE4;font-weight:300}
+.tt .tt-n{font-weight:700;font-size:13.5px;margin-bottom:3px}
+.tt table{border-collapse:collapse;margin-top:4px;font-size:11.5px}
+.tt table td{padding:1px 0}
+.tt table td:first-child{color:#C7CCE4;padding-right:8px}
+
+.tab-l{width:100%;border-collapse:collapse;font-size:12.5px}
+.tab-l td{padding:4px 2px;border-bottom:1px solid #F1F3F8;vertical-align:top}
+.tab-l td:first-child{color:var(--cinza);width:44%}
+.tab-l td:last-child{font-weight:500;text-align:right}
+
+.dimbloco{margin-bottom:10px}
+.dimtit{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;
+  letter-spacing:.4px;padding:5px 8px;background:var(--fundo);border-radius:6px;
+  display:flex;justify-content:space-between}
+.dimtit span{color:var(--cinza)}
+.vitem{display:flex;gap:8px;padding:5px 8px;border-bottom:1px solid #F4F6FA;
+  font-size:12px;line-height:1.35;align-items:flex-start}
+.vnum{flex:0 0 20px;color:var(--cinza-cl);font-weight:700;font-size:11px;text-align:right}
+.vtxt{flex:1 1 auto}
+.vsim,.vnao{flex:0 0 auto;font-weight:700;font-size:11px;padding:1px 7px;border-radius:9px}
+.vsim{background:#E4F2EA;color:#1B7A4B}
+.vnao{background:#F7E7E3;color:#B5482F}
+
+.avanc{font-size:12.5px;line-height:1.5}
+.avanc .alvo{background:var(--fundo);border-radius:8px;padding:9px 11px;margin-bottom:9px}
+.avanc .barra{display:flex;justify-content:space-between;padding:5px 0;
+  border-bottom:1px solid #F1F3F8}
+.avanc .falta{font-weight:700;color:var(--fxD)}
+.avanc .ok{font-weight:700;color:var(--fxA)}
+
+.rodape{font-size:10.5px;color:var(--cinza-cl);line-height:1.5;padding:2px 2px 10px}
+.rodape b{color:var(--cinza)}
+
+/* ---------- modal (variáveis / metodologia) ---------- */
+.modal-fundo{position:fixed;inset:0;background:rgba(20,25,50,.45);z-index:2000;
+  display:none;align-items:center;justify-content:center;padding:24px}
+.modal-fundo.on{display:flex}
+.modal{background:#fff;border-radius:14px;box-shadow:0 10px 40px rgba(20,25,50,.35);
+  width:min(680px,94vw);max-height:86vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-head{background:var(--navy);color:#fff;padding:12px 16px;display:flex;
+  align-items:center;gap:10px;border-bottom:3px solid var(--laranja)}
+.modal-tit{font-size:16px;font-weight:700}
+.modal-corpo{padding:14px 18px;overflow-y:auto}
+.mod-intro{font-size:13px;line-height:1.55;color:var(--tinta);margin:0 0 10px}
+.mod-rodape{font-size:11px;color:var(--cinza-cl);line-height:1.5;margin:12px 0 2px}
+.mod-faixas,.mod-dims{display:flex;flex-direction:column;gap:5px;padding:8px 4px;font-size:13px}
+.mod-tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+.mod-tab th{background:var(--fundo);color:var(--navy);font-size:11px;text-transform:uppercase;
+  letter-spacing:.3px;padding:6px;text-align:left;border-bottom:2px solid var(--linha)}
+.mod-tab td{padding:6px;border-bottom:1px solid #F1F3F8}
+.mod-tab td:not(:first-child),.mod-tab th:not(:first-child){text-align:center;
+  font-variant-numeric:tabular-nums}
+.mod-botoes{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.mod-btn{flex:1 1 200px;text-align:center;background:var(--navy);color:#fff;
+  text-decoration:none;font-size:13px;font-weight:700;padding:10px 14px;border-radius:9px}
+.mod-btn:hover{background:var(--navy2)}
+.mod-btn.laranja{background:var(--laranja);color:#3a2606}
+.mod-btn.laranja:hover{background:#E8933A}
+
+/* catálogo de variáveis (clicáveis) */
+.mvar{border-bottom:1px solid #F1F3F8;padding:7px 4px}
+.mvar-l{display:flex;align-items:flex-start;gap:9px;cursor:pointer}
+.mvar-l:hover .mvar-nome{color:var(--navy)}
+.mvar-nome{flex:1 1 auto;font-size:12.5px;line-height:1.4;font-weight:500}
+.mvar-seta{color:var(--cinza-cl);font-size:11px;transition:transform .15s}
+.mvar.aberta .mvar-seta{transform:rotate(180deg)}
+.mvar-barra{position:relative;height:16px;background:var(--fundo);border-radius:8px;
+  margin:6px 0 0 29px;overflow:hidden}
+.mvar-fill{position:absolute;inset:0 auto 0 0;background:var(--laranja);border-radius:8px}
+.mvar-pct{position:absolute;left:8px;top:0;line-height:16px;font-size:10px;font-weight:700;
+  color:#3a2606;text-shadow:0 0 3px rgba(255,255,255,.7)}
+.mvar-exp{display:none;margin:7px 0 2px 29px;font-size:12px;line-height:1.5;
+  color:var(--cinza);background:var(--fundo);border-left:3px solid var(--laranja);
+  border-radius:0 8px 8px 0;padding:7px 10px}
+.mvar.aberta .mvar-exp{display:block}
+
+/* controles do geovisualizador */
+.ctl-norte{background:#fff;width:34px;height:34px;padding:3px;
+  display:flex;align-items:center;justify-content:center}
+.ctl-norte svg{width:26px;height:26px}
+a.ctl-btn{background:#fff;width:34px;height:34px;line-height:34px;text-align:center;
+  font-size:18px;color:var(--navy);text-decoration:none;display:block}
+a.ctl-btn:hover{background:var(--fundo)}
+.ctl-coord{background:rgba(39,47,104,.9);color:#fff;font-size:11.5px;font-weight:500;
+  padding:4px 9px;border-radius:6px;box-shadow:var(--sombra);
+  font-variant-numeric:tabular-nums}
+.ctl-coord b{color:var(--laranja);font-weight:700}
+.leaflet-control-layers{border-radius:8px !important;box-shadow:var(--sombra) !important;
+  border:0 !important;font-family:inherit}
+.leaflet-control-measure{border-radius:8px !important;font-family:inherit}
+
+/* ---------- seta de rolagem (▾) ---------- */
+.scroll-host{position:relative}
+.scroll-seta{position:absolute;width:26px;height:26px;border-radius:50%;
+  background:var(--navy);color:#fff;border:0;cursor:pointer;display:none;
+  align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(20,25,50,.35);
+  z-index:20;font-size:14px;line-height:1;animation:pulsa 1.3s ease-in-out infinite}
+.scroll-seta.on{display:flex}
+.scroll-seta:hover{background:var(--laranja);color:#3a2606;animation:none}
+@keyframes pulsa{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+
+.load{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(220,230,241,.55);z-index:700;font-weight:500;color:var(--navy)}
+.load.on{display:flex}
+.load span{background:#fff;padding:9px 16px;border-radius:20px;box-shadow:var(--sombra)}
+
+@media(max-width:1280px){
+  .painel{flex-basis:330px}
+  .painel-esq{flex-basis:288px}
+}
