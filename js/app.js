@@ -70,6 +70,9 @@ Promise.all([
   throw e;
 }).then(function(res){
   ufData=res[0]; ufFeats=ufData.features; META=res[1]; BUSCA=res[2];
+  // no celular, abre por Estados (≈1 MB) em vez de Municípios (11,5 MB); o usuário
+  // troca para Municípios quando quiser (carrega sob demanda, com spinner).
+  if(window.matchMedia && window.matchMedia('(max-width:860px)').matches) S.brModo='uf';
   iniciaMapa(); bindUI(); desenhaBrasil(); atualiza();
 });
 
@@ -684,6 +687,13 @@ function abreDetalhe(p){                      // MUNICÍPIO
   }
   document.getElementById('detCard').style.display='block';
   renderDetalhe();
+  scrollFichaMobile();
+}
+// no celular, o painel fica abaixo do mapa; rola até a ficha ao abri-la
+function scrollFichaMobile(){
+  if(window.innerWidth>860) return;
+  var c=document.getElementById('detCard');
+  if(c) setTimeout(function(){ c.scrollIntoView({behavior:'smooth',block:'start'}); },80);
 }
 
 function abreDetalheUF(p){                     // UNIDADE DA FEDERAÇÃO

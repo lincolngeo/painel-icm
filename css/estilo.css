@@ -305,3 +305,41 @@ a.ctl-btn:hover{background:var(--fundo)}
   .painel{flex-basis:330px}
   .painel-esq{flex-basis:288px}
 }
+
+/* ============ MOBILE / TELAS ESTREITAS ============ */
+@media(max-width:860px){
+  /* a página passa a rolar na vertical (no desktop ela trava em 100vh) */
+  html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+  body{height:auto}
+
+  header{padding:8px 12px;gap:10px;flex-wrap:wrap}
+  header h1{font-size:14.5px;line-height:1.15}
+  header .sub{display:none}
+  .marca-placa{padding:5px}
+  .marca-placa img{width:40px}
+  header nav{flex-wrap:wrap;justify-content:flex-end}
+
+  .controles{gap:8px 14px;padding:8px 12px}
+  .ctl-direita{gap:10px}
+
+  /* corpo em pilha: mapa no topo, painéis abaixo (page-scroll) */
+  .corpo{flex-direction:column;overflow:visible}
+  #mapa{order:1;flex:0 0 auto;height:60vh;min-height:340px;width:100%}
+  #painelEsq{order:2}
+  #painelDir{order:3}
+  .painel,.painel-esq{flex:0 0 auto;width:auto;max-height:none;overflow:visible;
+    border-left:0;border-right:0;border-top:1px solid var(--linha)}
+  .painel-esq{border-top:0}
+  .lista-wrap{max-height:340px}
+  .gchart{height:150px}
+}
+@media(max-width:560px){
+  header h1{font-size:12.5px}
+  header nav a{padding:5px 8px;font-size:11.5px}
+  .controles{gap:6px 10px;padding:8px 10px}
+  .grupo>label{font-size:10px}
+  .seg button{padding:5px 9px;font-size:12px}
+  #mapa{height:54vh}
+  .painel{padding:10px}
+  .escopo{font-size:15px}
+}
