@@ -433,15 +433,29 @@ function atualiza(){
   if(S.nivel==='uf'){
     var u=ufFeats.find(function(f){ return f.properties.uf===S.uf; }).properties;
     mig.innerHTML='<b>Brasil</b> › <b>'+u.nm+'</b> · '+nfmt(u.n_mun)+' municípios';
-    document.getElementById('escopoNome').textContent=u.nm;
-    document.getElementById('escopoSub').textContent=nfmt(u.n_mun)+' municípios · '+u.rg;
   } else {
     mig.innerHTML='<b>Brasil</b> · 27 UFs';
-    document.getElementById('escopoNome').textContent='Brasil';
-    document.getElementById('escopoSub').textContent='5.570 municípios · 27 UFs';
   }
-  reestiliza(); legenda(); cards(); graficoFaixa(); graficoPrior(); listaLocais(); rodape();
-  narrativa();
+  reestiliza(); legenda(); ajustaPainelEsq(); cards(); graficoFaixa(); graficoPrior();
+  listaLocais(); rodape(); narrativa();
+}
+
+// Mostra no painel esquerdo só o que faz sentido para o recorte:
+//  Brasil    → resumo do recorte + gráfico de faixas + perfil de risco
+//  UF        → (resumo e faixas migram para a ficha "Resumo territorial") + perfil de risco
+//  Município → apenas a narrativa e a ficha (abas)
+function ajustaPainelEsq(){
+  var ehMun=!!(detProps && detTipo==='mun');
+  var ehBrasil=(S.nivel==='brasil');
+  function ver(id,mostra){
+    var el=document.getElementById(id); if(el) el.style.display=mostra?'':'none';
+  }
+  ver('cardResumo', ehBrasil && !ehMun);
+  ver('cardFaixa',  ehBrasil && !ehMun);
+  ver('cardPrior',  !ehMun);
+  // ECharts precisa remedir depois de reaparecer
+  if(chartFaixa && ehBrasil && !ehMun) chartFaixa.resize();
+  if(chartPrior && !ehMun) chartPrior.resize();
 }
 
 // ================= narrativa automática (gerada por regras) =================
@@ -541,7 +555,9 @@ function cards(){
 function kpi(v,r,cls){ return '<div class="kpi'+(cls?' '+cls:'')+'"><div class="v">'+v+'</div><div class="r">'+r+'</div></div>'; }
 
 function graficoFaixa(){
-  if(!chartFaixa) chartFaixa=echarts.init(document.getElementById('chartFaixa'));
+  var elF=document.getElementById('chartFaixa');
+  if(!elF||!elF.offsetParent) return;            // card oculto neste recorte
+  if(!chartFaixa) chartFaixa=echarts.init(elF);
   var r=resumo();
   // ordem natural da escala (A no topo -> D embaixo): ECharts inverte o eixo Y
   var cats=ORDEM_FX.slice().reverse();
@@ -564,7 +580,9 @@ function graficoFaixa(){
 }
 
 function graficoPrior(){
-  if(!chartPrior) chartPrior=echarts.init(document.getElementById('chartPrior'));
+  var elP=document.getElementById('chartPrior');
+  if(!elP||!elP.offsetParent) return;            // card oculto neste recorte
+  if(!chartPrior) chartPrior=echarts.init(elP);
   var r=resumo(), np=r.n-r.prior;
   chartPrior.setOption({
     grid:{left:4,right:8,top:4,bottom:4,containLabel:true},
@@ -744,6 +762,7 @@ function abreDetalheUF(p){                     // UNIDADE DA FEDERAÇÃO
 }
 
 function fechaDetalhe(){ document.getElementById('detCard').style.display='none'; detProps=null;
+  ajustaPainelEsq(); graficoFaixa(); graficoPrior();
   atualizaSetasPaineis(); }
 
 function renderDetalhe(){
@@ -756,6 +775,7 @@ function renderDetalhe(){
   else { h=renderMunAvancar(p); }
   c.innerHTML=h;
   if(detAba==='vars') ligaVars(c);
+  ajustaPainelEsq(); graficoFaixa(); graficoPrior();
   var pe=document.getElementById('painelEsq'); if(pe) pe.scrollTop=0;
   atualizaSetasPaineis();
 }
@@ -831,10 +851,15 @@ function renderUFresumo(p){
     lin('Não prioritários',nfmt(np)+' ('+pfmt(np,p.n_mun)+')')+
     '</table>'+
     '<div class="dimtit" style="margin-top:8px"><span style="color:#272F68">Distribuição por faixa'+
-    '</span></div><table class="tab-l">'+
-    ORDEM_FX.map(function(fx){ return '<tr><td><span class="pill p'+fx+'">'+fx+'</span> '+
-      META.faixas[fx]+'</td><td><b>'+nfmt(p['f'+fx])+'</b> ('+pfmt(p['f'+fx],p.n_mun)+')</td></tr>';
-    }).join('')+'</table>'+
+    '</span><span>'+nfmt(p.n_mun)+' municípios</span></div>'+
+    '<div class="fxbars">'+
+    ORDEM_FX.map(function(fx){
+      var v=p['f'+fx]||0, pc=p.n_mun?(100*v/p.n_mun):0;
+      return '<div class="fxrow"><span class="pill p'+fx+'">'+fx+'</span>'+
+        '<span class="fxnome">'+META.faixas[fx]+'</span>'+
+        '<span class="fxbar"><i style="width:'+pc.toFixed(1)+'%;background:'+COR_FX[fx]+'"></i></span>'+
+        '<b class="fxval">'+nfmt(v)+' · '+pfmt(v,p.n_mun)+'</b></div>';
+    }).join('')+'</div>'+
     '<div class="nar-destaque" style="margin-top:9px">Estes valores por UF são <b>leituras '+
     'derivadas</b> deste painel (a metodologia atribui faixa e pontuação apenas a municípios).</div>';
 }

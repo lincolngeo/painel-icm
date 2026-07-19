@@ -49,6 +49,7 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 .seg button{border:0;background:transparent;font-family:inherit;font-size:12.5px;
   font-weight:500;color:var(--cinza);padding:5px 12px;border-radius:6px;cursor:pointer}
 .seg button:hover{color:var(--navy)}
+.rot-sm{display:none}   /* rótulo curto: só em telas bem estreitas */
 .seg button.on{background:var(--navy);color:#fff;box-shadow:var(--sombra)}
 .seg.laranja button.on{background:var(--laranja);color:#3a2606}
 /* dropdown de exportação */
@@ -83,7 +84,8 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 .corpo{flex:1 1 auto;display:flex;min-height:0}
 #mapa{flex:1 1 auto;background:#DCE6F1;position:relative}
 .leaflet-container{background:#DCE6F1;font-family:inherit}
-.painel{flex:0 0 380px;background:var(--fundo);border-left:1px solid var(--linha);
+/* painel DIREITO: auxiliar — só a lista rolável + rodapé */
+.painel{flex:0 0 310px;background:var(--fundo);border-left:1px solid var(--linha);
   overflow-y:auto;padding:12px}
 .card{background:#fff;border-radius:10px;box-shadow:var(--sombra);
   padding:12px 14px;margin-bottom:10px}
@@ -92,7 +94,9 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 .escopo{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:2px}
 .escopo small{font-weight:500;color:var(--cinza-cl);font-size:12px}
 
-/* busca */
+/* busca — agora na barra de controles, ao lado de Municípios/Estados */
+.grupo-busca .busca{margin-top:0}
+.grupo-busca input{width:215px;padding:6px 10px;font-size:12.5px;background:#fff}
 .busca{position:relative;margin-top:8px}
 .busca input{width:100%;border:1px solid var(--linha);border-radius:8px;
   padding:7px 10px;font-family:inherit;font-size:13px;color:var(--tinta);background:var(--fundo)}
@@ -122,8 +126,19 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 .gchart2{width:100%;height:76px}
 .dica{font-size:11px;color:var(--cinza);line-height:1.4;margin-top:4px}
 
-/* lista rolavel */
-.lista-wrap{max-height:280px;overflow-y:auto;border:1px solid var(--linha);
+/* distribuição por faixa com barras embutidas (ficha da UF) */
+.fxbars{margin-top:5px}
+.fxrow{display:flex;align-items:center;gap:7px;padding:3px 0;font-size:11.5px}
+.fxrow .pill{flex:0 0 auto}
+.fxnome{flex:1 1 auto;color:var(--cinza);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fxbar{flex:0 0 88px;position:relative;height:10px;background:var(--fundo);
+  border-radius:5px;overflow:hidden}
+.fxbar i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;display:block}
+.fxval{flex:0 0 auto;font-weight:700;font-size:11px;white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+
+/* lista rolavel (painel direito, agora ocupa a altura disponível) */
+.lista-wrap{max-height:calc(100vh - 300px);overflow-y:auto;border:1px solid var(--linha);
   border-radius:8px}
 .rank{width:100%;border-collapse:collapse;font-size:12.5px}
 .rank thead th{position:sticky;top:0;background:#fff;z-index:2;
@@ -137,8 +152,8 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 .rank tr.sel td{background:#FDE7C8}
 .rank .pos{color:var(--cinza-cl);width:22px;text-align:right}
 
-/* ---------- painel esquerdo (coluna fixa, fora do mapa) ---------- */
-.painel-esq{flex:0 0 320px;border-left:0;border-right:1px solid var(--linha)}
+/* ---------- painel ESQUERDO: principal de informações (mais largo) ---------- */
+.painel-esq{flex:0 0 400px;border-left:0;border-right:1px solid var(--linha)}
 .narr-card h3,.leg-card h3{margin:0 0 7px}
 .nar-corpo{font-size:12.5px;line-height:1.5;color:var(--tinta)}
 .nar-corpo b{color:var(--navy)}
@@ -326,8 +341,9 @@ a.ctl-btn:hover{background:var(--fundo)}
 .load span{background:#fff;padding:9px 16px;border-radius:20px;box-shadow:var(--sombra)}
 
 @media(max-width:1280px){
-  .painel{flex-basis:330px}
-  .painel-esq{flex-basis:288px}
+  .painel{flex-basis:270px}        /* direito: só a lista */
+  .painel-esq{flex-basis:340px}    /* esquerdo: principal */
+  .grupo-busca input{width:170px}
 }
 
 /* ============ MOBILE / TELAS ESTREITAS ============ */
@@ -344,7 +360,11 @@ a.ctl-btn:hover{background:var(--fundo)}
   header nav{flex-wrap:wrap;justify-content:flex-end}
 
   .controles{gap:8px 14px;padding:8px 12px}
-  .ctl-direita{gap:10px}
+  /* o bloco da direita desce para a linha inteira; busca ocupa a largura toda */
+  .ctl-direita{gap:8px 12px;margin-left:0;width:100%;flex-wrap:wrap}
+  .grupo-busca{flex:1 1 100%}
+  .grupo-busca .busca{flex:1 1 auto}
+  .grupo-busca input{width:100%}
 
   /* corpo em pilha: mapa no topo, painéis abaixo (page-scroll) */
   .corpo{flex-direction:column;overflow:visible}
@@ -375,13 +395,42 @@ a.ctl-btn:hover{background:var(--fundo)}
   .legenda-in .sw{width:11px;height:11px}
   .legenda-in .dica{font-size:9.5px}
 }
+/* --- smartphone: cabeçalho e comandos compactos p/ não "embolar" em várias linhas --- */
 @media(max-width:560px){
+  header{padding:6px 10px;gap:8px}
   header h1{font-size:12.5px}
-  header nav a{padding:5px 8px;font-size:11.5px}
-  .controles{gap:6px 10px;padding:8px 10px}
-  .grupo>label{font-size:10px}
-  .seg button{padding:5px 9px;font-size:12px}
+  .marca-placa{padding:4px;border-radius:8px}
+  .marca-placa img{width:34px}
+  header nav{gap:2px}
+  header nav a{padding:4px 7px;font-size:11px}
+
+  .controles{gap:5px 9px;padding:6px 10px}
+  .grupo{gap:5px}
+  .grupo>label{font-size:9px;letter-spacing:.2px}
+  .seg{padding:1px;border-radius:7px}
+  .seg button{padding:4px 7px;font-size:11.5px;border-radius:5px}
+  .migalha{font-size:11.5px;gap:6px}
+  .migalha button{padding:4px 8px;font-size:11px}
+  .grupo-busca input{font-size:12px;padding:5px 9px}
+
   #mapa{height:54vh}
   .painel{padding:10px}
-  .escopo{font-size:15px}
+}
+/* telas bem estreitas: some com os rótulos dos grupos (os botões já se explicam),
+   ganhando linhas inteiras de volta para o mapa */
+@media(max-width:430px){
+  header h1{font-size:11.5px}
+  .marca-placa img{width:30px}
+  header nav a{padding:3px 6px;font-size:10.5px}
+  .controles{gap:5px 8px;padding:5px 8px}
+  .grupo>label{display:none}
+  .seg button{padding:4px 6px;font-size:11px}
+  .migalha{font-size:11px}
+  /* rótulos curtos: os pares passam a caber na mesma linha (5 linhas -> 3) */
+  .rot-lg{display:none}
+  .rot-sm{display:inline}
+  /* busca vai para o fim, deixando "Municípios/Estados" e a migalha juntos */
+  .grupo-busca{order:3}
+  .migalha{order:2}
+  #mapa{height:52vh}
 }
