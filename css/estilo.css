@@ -326,6 +326,9 @@ a.ctl-btn:hover{background:var(--fundo)}
   z-index:20;font-size:14px;line-height:1;animation:pulsa 1.3s ease-in-out infinite}
 .scroll-seta.on{display:flex}
 .scroll-seta:hover{background:var(--laranja);color:#3a2606;animation:none}
+/* seta para CIMA: só no mobile (no desktop o cursor/roda já resolvem) */
+.scroll-seta.cima{animation:none}
+.scroll-seta.cima.on{display:none}
 @keyframes pulsa{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 
 /* ---------- setas de rolagem da PÁGINA (mobile) ---------- */
@@ -390,6 +393,8 @@ a.ctl-btn:hover{background:var(--fundo)}
   .leaflet-control-layers-expanded .leaflet-control-layers-list{padding-right:22px}
 
   .rol-pag{display:flex}   /* setas de rolagem da página */
+  /* nas janelas roláveis (modais e tabela de UFs/municípios) libera a seta p/ cima */
+  .scroll-seta.cima.on{display:flex}
 
   /* legenda compacta p/ não cobrir a caixa de exportação */
   .leaflet-legenda{padding:6px 8px 7px;max-width:150px}

@@ -76,9 +76,9 @@ Promise.all([
   throw e;
 }).then(function(res){
   ufData=res[0]; ufFeats=ufData.features; META=res[1]; BUSCA=res[2];
-  // no celular, abre por Estados (≈1 MB) em vez de Municípios (11,5 MB); o usuário
-  // troca para Municípios quando quiser (carrega sob demanda, com spinner).
-  if(window.matchMedia && window.matchMedia('(max-width:860px)').matches) S.brModo='uf';
+  // abre sempre pelo panorama municipal (S.brModo='mun'), inclusive no celular:
+  // mun_brasil.geojson foi enxugado (3 casas decimais, sem vars/falta) e trafega
+  // ~2,3 MB comprimido; o spinner cobre a espera.
   iniciaMapa(); bindUI(); desenhaBrasil(); atualiza();
 });
 
@@ -1531,21 +1531,37 @@ function atualizaSetaScroll(el){
   if(!el) return;
   var host=el.parentElement;
   host.classList.add('scroll-host');
-  var seta=el._seta;
-  if(!seta){
-    seta=document.createElement('button');
-    seta.className='scroll-seta'; seta.type='button'; seta.innerHTML='▾';
-    seta.title='Rolar para baixo';
-    seta.onclick=function(){ el.scrollBy({top:Math.round(el.clientHeight*0.8),behavior:'smooth'}); };
-    host.appendChild(seta);
-    el._seta=seta;
-    el.addEventListener('scroll',function(){ posSeta(el,seta); });
+  if(!el._seta){
+    el._seta=novaSeta(host,el,'baixo');
+    el._setaCima=novaSeta(host,el,'cima');   // visível só no mobile (CSS)
+    el.addEventListener('scroll',function(){ posSeta(el); });
   }
-  posSeta(el,seta);
+  posSeta(el);
 }
-function posSeta(el,seta){
-  var falta=el.scrollHeight-el.scrollTop-el.clientHeight;
-  seta.classList.toggle('on', falta>10);
-  seta.style.top=(el.offsetTop+el.clientHeight-32)+'px';
-  seta.style.left=(el.offsetLeft+el.clientWidth/2-13)+'px';
+function novaSeta(host,el,dir){
+  var b=document.createElement('button');
+  b.type='button';
+  b.className='scroll-seta'+(dir==='cima'?' cima':'');
+  b.innerHTML=(dir==='cima'?'▴':'▾');
+  b.title=(dir==='cima'?'Rolar para cima':'Rolar para baixo');
+  b.onclick=function(){
+    var d=Math.round(el.clientHeight*0.8);
+    el.scrollBy({top:(dir==='cima'?-d:d),behavior:'smooth'});
+  };
+  host.appendChild(b);
+  return b;
+}
+function posSeta(el){
+  var x=el.offsetLeft+el.clientWidth/2-13;
+  var baixo=el._seta, cima=el._setaCima;
+  if(baixo){
+    baixo.classList.toggle('on', (el.scrollHeight-el.scrollTop-el.clientHeight)>10);
+    baixo.style.top=(el.offsetTop+el.clientHeight-32)+'px';
+    baixo.style.left=x+'px';
+  }
+  if(cima){
+    cima.classList.toggle('on', el.scrollTop>10);
+    cima.style.top=(el.offsetTop+6)+'px';
+    cima.style.left=x+'px';
+  }
 }
