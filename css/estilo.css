@@ -40,7 +40,10 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 
 /* ---------- controles ---------- */
 .controles{background:#fff;border-bottom:1px solid var(--linha);flex:0 0 auto;
-  display:flex;align-items:center;gap:18px;padding:8px 20px;flex-wrap:wrap;z-index:900}
+  display:flex;align-items:center;gap:18px;padding:8px 20px;flex-wrap:wrap;
+  /* acima dos cantos de controle do Leaflet (z-index:1000) para que a lista da
+     busca abra POR CIMA do mapa e dos ícones (camadas, exportar, zoom, norte…) */
+  position:relative;z-index:1200}
 .grupo{display:flex;align-items:center;gap:8px}
 .grupo>label{font-size:11px;font-weight:700;color:var(--cinza);
   text-transform:uppercase;letter-spacing:.4px}
