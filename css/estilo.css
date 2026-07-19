@@ -185,7 +185,10 @@ header nav a:hover{background:rgba(255,255,255,.09);color:#fff}
 .exp-panel{display:none;position:absolute;top:0;right:100%;width:252px;background:#fff;
   border-radius:10px;box-shadow:0 6px 24px rgba(20,25,50,.24);border:1px solid var(--linha);
   padding:6px;text-align:left}
-.exp-ctl:hover .exp-panel,.exp-ctl.aberto .exp-panel{display:block}
+/* abre por classe (toque/clique) sempre; por hover só onde há cursor real
+   (no toque o :hover fica "grudado" e impediria o × de fechar) */
+.exp-ctl.aberto .exp-panel{display:block}
+@media (hover:hover){ .exp-ctl:hover .exp-panel{display:block} }
 .exp-panel button[data-exp]{display:block;width:100%;text-align:left;border:0;background:transparent;
   font-family:inherit;font-size:13px;color:var(--tinta);padding:8px 9px;border-radius:7px;cursor:pointer}
 .exp-panel button[data-exp]:hover{background:var(--fundo);color:var(--navy)}
