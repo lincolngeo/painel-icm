@@ -6,15 +6,15 @@
    - domínios externos (tiles Esri/CARTO/OSM, gov.br): não intercepta (rede padrão).
    Ao editar arquivos do painel, incremente CACHE para limpar o cache antigo. */
 'use strict';
-var CACHE = 'painel-icm-v5';
+var CACHE = 'painel-icm-v7';
 
 // itens do "app shell" pré-cacheados na instalação (tolerante a falhas individuais)
 var SHELL = [
   './',
   './index.html',
   './manifest.json',
-  './css/estilo.css?v=8',
-  './js/app.js?v=12',
+  './css/estilo.css?v=9',
+  './js/app.js?v=14',
   './libs/leaflet.css',
   './libs/leaflet.js',
   './libs/echarts.min.js',

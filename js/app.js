@@ -1008,11 +1008,40 @@ function bindUI(){
   });
   window.addEventListener('resize',function(){ atualizaSetasPaineis();
     var m=document.getElementById('modalCorpo'); if(m&&m.offsetParent) atualizaSetaScroll(m); });
+  // setas de rolagem da página (mobile)
+  var rolB=document.getElementById('rolBaixo'), rolC=document.getElementById('rolCima');
+  if(rolB) rolB.onclick=function(){ rolaPagina(Math.round(window.innerHeight*0.8)); };
+  if(rolC) rolC.onclick=function(){ rolaPagina(-Math.round(window.innerHeight*0.8)); };
+  window.addEventListener('scroll',atualizaRolagemPagina,{passive:true});
+  atualizaRolagemPagina();
   bindBusca();
 }
 function atualizaSetasPaineis(){
   ['#painelEsq','#painelDir','.lista-wrap'].forEach(function(s){
     var el=document.querySelector(s); if(el&&el.offsetParent) atualizaSetaScroll(el); });
+  atualizaRolagemPagina();
+}
+// rola a página com animação; se o navegador não animar, cai no salto instantâneo
+function rolaPagina(delta){
+  var antes=window.pageYOffset||document.documentElement.scrollTop||0;
+  try{ window.scrollBy({top:delta,behavior:'smooth'}); }
+  catch(e){ window.scrollBy(0,delta); }
+  setTimeout(function(){
+    var agora=window.pageYOffset||document.documentElement.scrollTop||0;
+    if(Math.abs(agora-antes)<2) window.scrollBy(0,delta);
+    atualizaRolagemPagina();
+  },350);
+}
+// setas de rolagem da PÁGINA (mobile): ▾ enquanto houver conteúdo abaixo, ▴ ao rolar
+function atualizaRolagemPagina(){
+  var baixo=document.getElementById('rolBaixo'), cima=document.getElementById('rolCima');
+  if(!baixo||!cima) return;
+  if(window.innerWidth>860){ baixo.classList.remove('on'); cima.classList.remove('on'); return; }
+  var y=window.pageYOffset||document.documentElement.scrollTop||0;
+  var vh=window.innerHeight;
+  var total=Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  baixo.classList.toggle('on', (y+vh) < (total-24));
+  cima.classList.toggle('on', y>140);
 }
 function loading(on){ document.getElementById('load').classList.toggle('on',on); }
 
@@ -1178,12 +1207,21 @@ function localizadorPNG(){
   var r=recorte(), W=540,H=540, cv=document.createElement('canvas');
   cv.width=W*2; cv.height=H*2; var ctx=cv.getContext('2d'); ctx.scale(2,2);
   ctx.fillStyle='#DCE6F1'; ctx.fillRect(0,0,W,H);
-  var fundo, destaque=null, bb, brMun=false;
+  var fundo, destaque=null, bb, brMun=false, ufZoom=false, ufFeat=null;
   if(r.tipo==='mun'){ fundo=munFeats; destaque=S.sel;
     // Vitória-ES: enquadra a UF sem as ilhas oceânicas (só se o município tiver porção continental)
     var selF=munFeats.find(function(f){ return f.properties.cd===S.sel; });
     bb=(selF&&temCont(selF))?bboxCont(munFeats):bboxFeats(munFeats); }
-  else if(r.tipo==='uf'){ fundo=ufFeats; destaque=S.uf; bb=bboxCont(ufFeats); }
+  else if(r.tipo==='uf'){
+    // zoom NA UF: municípios coloridos pela faixa do ICM + UFs do entorno em cinza
+    ufFeat=ufFeats.find(function(f){ return f.properties.uf===S.uf; });
+    ufZoom=!!(ufFeat && munFeats && munFeats.length);
+    if(ufZoom){
+      fundo=ufFeats; bb=bboxCont([ufFeat]);
+      var mx=(bb[2]-bb[0])*0.04, my=(bb[3]-bb[1])*0.04;   // respiro p/ mostrar o entorno
+      bb=[bb[0]-mx,bb[1]-my,bb[2]+mx,bb[3]+my];
+    } else { fundo=ufFeats; destaque=S.uf; bb=bboxCont(ufFeats); }  // fallback: UF no país
+  }
   else {   // Brasil: mapa de TODOS os municípios, coloridos pela faixa do ICM (como no painel)
     if(munBrFeats&&munBrFeats.length){ fundo=munBrFeats; brMun=true; }
     else fundo=ufFeats;   // fallback: arquivo nacional ainda não carregado → UFs por predominante
@@ -1198,6 +1236,24 @@ function localizadorPNG(){
         a.forEach(function(pt,i){ var q=P(pt[0],pt[1]);
           i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]); }); ctx.closePath();
       } else a.forEach(dr); })(g.coordinates); }
+
+  // ---- recorte de UF: entorno cinza + municípios da UF por faixa ----
+  if(ufZoom){
+    ufFeats.forEach(function(f){                 // 1) UFs vizinhas (cinza, divisas brancas)
+      path(f.geometry);
+      ctx.fillStyle='#C8D0DE'; ctx.globalAlpha=1; ctx.fill();
+      ctx.lineWidth=.9; ctx.strokeStyle='#fff'; ctx.stroke();
+    });
+    munFeats.forEach(function(f){                // 2) municípios da UF (cores do ICM)
+      var p=f.properties;
+      path(f.geometry);
+      ctx.fillStyle=p.semICM?COR_SEMICM:(COR_FX[p.fx]||COR_SEM);
+      ctx.globalAlpha=1; ctx.fill();
+      ctx.lineWidth=.55; ctx.strokeStyle='#fff'; ctx.stroke();
+    });
+    return cv.toDataURL('image/png');
+  }
+
   var destFeat=null;
   fundo.forEach(function(f){ var p=f.properties, ehDest=false;
     if(r.tipo==='mun') ehDest=(p.cd===destaque);
