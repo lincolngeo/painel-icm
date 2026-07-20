@@ -87,3 +87,21 @@ preferencial)** no cabeçalho, azul `#272F68`, laranja `#F4A44C`; fonte Mukta
   internet (a base "Branco (offline)" cobre o uso sem rede).
 
 Elaboração: Lincoln Duques de Barros. Analista de Infraestrutura. SEDEC/MIDR.
+
+## Licença e autoria
+
+© 2026 Lincoln Duques de Barros. Este trabalho está licenciado sob
+**Creative Commons Attribution 4.0 International (CC BY 4.0)** — veja o arquivo
+[`LICENSE`](LICENSE).
+
+Você pode copiar, redistribuir e adaptar este material para qualquer finalidade,
+inclusive institucional, **desde que mantenha a atribuição ao autor**, indique se
+houve modificações e referencie a licença.
+
+**Intenção de migração:** este é um protótipo em avaliação, elaborado no âmbito da
+SEDEC/MIDR, e destina-se à eventual incorporação institucional pela própria
+SEDEC/MIDR. A CC BY 4.0 permite essa migração preservando o crédito de autoria.
+
+Os dados do ICM são públicos (SEDEC/MIDR) e a malha municipal é do IBGE; a licença
+deste repositório recai sobre o painel (código, organização e textos), não sobre
+os dados oficiais de origem.

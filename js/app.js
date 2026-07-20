@@ -911,7 +911,11 @@ function rodape(){
     '<b>Metodologia:</b> '+META.metodologia+'. O enquadramento em faixa considera o porte e o '+
     'perfil de risco do município e exige mínimos de variáveis em cada dimensão. '+
     'Agregados por UF (faixa predominante e média) são leituras derivadas deste painel.<br>'+
-    '<b>Elaboração:</b> Lincoln Duques de Barros. Analista de Infraestrutura. SEDEC/MIDR.';
+    '<b>Elaboração:</b> Lincoln Duques de Barros. Analista de Infraestrutura. SEDEC/MIDR.<br>'+
+    '<span style="color:#77808A">© 2026 Lincoln Duques de Barros · Licença '+
+    '<a href="https://creativecommons.org/licenses/by/4.0/deed.pt" target="_blank" '+
+    'rel="noopener" style="color:#3A4585">CC BY 4.0</a> '+
+    '(uso livre com atribuição). Protótipo em avaliação.</span>';
 }
 
 // ---------- modais (20 variáveis / metodologia) ----------
